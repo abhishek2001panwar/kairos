@@ -7,6 +7,15 @@ const nextConfig = {
         register: true,
         skipWating: true,
     }),
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "**",
+                pathname: "**"
+            },
+        ],
+    },
 };
 
 export default nextConfig;
