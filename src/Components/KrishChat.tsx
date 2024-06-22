@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react';
-import { IoSend } from 'react-icons/io5';
 import Image from 'next/image';
 import Chat_Bot_Logo from '@/Images/Chat_Bot_Logo.png';
 
@@ -9,14 +8,16 @@ export const KrishChat: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   // State to hold all messages in the first chat section
   const [messages, setMessages] = useState<string[]>([]);
-  // State to hold all messages in the second chat section
-  const [aiMessages, setAiMessages] = useState<string[]>([]);
+  // State to hold the message from the AI
+  const [aiMessage, setAiMessage] = useState<string>('');
   // Ref for the chat container
   const chatContainerRef = useRef<HTMLDivElement>(null);
   // State to track whether the welcome message should be displayed
   const [showWelcomeMessage, setShowWelcomeMessage] = useState<boolean>(true);
   // State to track whether to show the "Hello" div
   const [showHelloDiv, setShowHelloDiv] = useState<boolean>(false);
+  // State to track if the bot is typing
+  const [isBotTyping, setIsBotTyping] = useState<boolean>(false);
 
   // Function to handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -47,9 +48,16 @@ export const KrishChat: React.FC = () => {
       setMessages([...messages, message]);
       // Call the API with the message
       try {
+        setIsBotTyping(true); // Set isBotTyping to true when sending a message
         // Your API call logic here...
+        setTimeout(() => {
+          setIsBotTyping(false); // Set isBotTyping to false after receiving a response
+          setAiMessage(`Response to "${message}"`); // Example response
+          scrollToBottom(); // Scroll to the bottom after receiving a response
+        }, 2000); // Example delay to simulate the AI response time
       } catch (error) {
         console.error(error);
+        setIsBotTyping(false); // Set isBotTyping to false in case of an error
       }
       // Clear the input field
       setMessage('');
@@ -90,14 +98,14 @@ export const KrishChat: React.FC = () => {
   // Scroll to bottom on mount and when messages change
   useEffect(() => {
     scrollToBottom();
-  }, [messages, aiMessages]);
+  }, [messages, aiMessage]);
 
   // Effect to show "Hello" div when a new message is received
   useEffect(() => {
-    if (aiMessages.length > 0) {
+    if (aiMessage !== '') {
       setShowHelloDiv(true);
     }
-  }, [aiMessages]);
+  }, [aiMessage]);
 
   return (
     <div className="flex">
@@ -121,7 +129,7 @@ export const KrishChat: React.FC = () => {
                 <div className="w-16 h-16 mx-44  rounded-full ">
                   {/* <Image src={Chat_Bot_Logo} /> */}
                 </div>
-                <h1 className="text-2xl ml-5 w-4/5 font-bold text-black">Hello job seekers how can I help you</h1>
+                <h1 className="text-2xl ml-5 w-4/5 font-bold text-black">Welcome</h1>
               </div>
             </div>
           )}
@@ -129,7 +137,7 @@ export const KrishChat: React.FC = () => {
           {/* Display "Hello" div when a new message is received */}
           {showHelloDiv && (
             <div className="text-center w-full h-full text-gray-100 flex justify-center items-center">
-              <h1 className="text-2xl py-1 font-bold text-black">Hello</h1>
+              <h1 className="text-2xl py-1 font-bold text-black">Welcome</h1>
             </div>
           )}
 
@@ -154,6 +162,28 @@ export const KrishChat: React.FC = () => {
               </div>
             </>
           ))}
+
+          {/* Display the AI message */}
+          {aiMessage && (
+            <>
+              <h2 className="mr-16 -py-1 flex gap-3 font-[1000] ">
+                <div className="-p-1 w-6 h-6 text-right  rounded-full">
+                  {/* <Image src={Chat_Bot_Logo} /> */}
+                </div>
+                Satan
+              </h2>
+              <div className="py-3 px-12 text-md text-wrap mr-24 ">
+                {aiMessage}
+              </div>
+            </>
+          )}
+
+          {/* Display loading indicator when bot is typing */}
+          {isBotTyping && (
+            <div className="text-center w-full h-full text-gray-100 flex justify-center items-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          )}
         </div>
 
         {/* Input section */}
@@ -181,20 +211,20 @@ export const KrishChat: React.FC = () => {
           <input
             type="text"
             placeholder="Type something..."
-            className="w-[50vh] px-4 py-2 mr-4 text-black bg-gray-100 rounded-lg border-r-none focus:outline-none break-all"
+            className="w-[120vh] px-4 py-2 mr-4 focus:border-none text-black outline-grey-100 border-gray-200 border-none bg-gray-100 rounded-lg "
             value={message}
             onChange={handleInputChange}
             onKeyPress={handleKeyPress}
           />
 
           <button
-            className="px-4 py-2 text-whiterounded-lg focus:outline-none overflow-y-auto overflow-x-hidden"
+            className="px-4 py-2 text-whiterounded-lg focus:outline-none overflow-y-auto "
             onClick={handleSendMessage}
             style={{ wordWrap: 'break-word' }}
           >
-            <IoSend className=" text-black" size={20} />
           </button>
         </div>
+        
         {/* <h4 className="flex justify-center ml-3 w-3/2 py-3 md:py-4 font-bold text-xs">
           Given Sanatas's fallibility, it's prudent to verify crucial information diligently..
         </h4> */}
@@ -208,3 +238,4 @@ export const KrishChat: React.FC = () => {
   );
 };
 
+export default KrishChat;

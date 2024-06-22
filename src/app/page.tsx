@@ -12,13 +12,13 @@ const Page = () => {
   return (
     <div>
       <a href="dashboard">dash</a>
-      <a href="login">login</a>
-      <Navbar/>
+      <a href="/login">login</a>
+      {/* <Navbar/>
       <Herosection/>
       <About/>
       <Chatbot/>
       <FAQ/>
-      <Foot/>
+      <Foot/> */}
       <KrishChat/>
     </div>
   )
