@@ -11,15 +11,13 @@ import { KrishChat } from '@/Components/KrishChat'
 const Page = () => {
   return (
     <div>
-      <a href="dashboard">dash</a>
-      <a href="/login">login</a>
-      {/* <Navbar/>
+      
+      <Navbar/>
       <Herosection/>
       <About/>
       <Chatbot/>
       <FAQ/>
-      <Foot/> */}
-      <KrishChat/>
+      <Foot/>
     </div>
   )
 }
